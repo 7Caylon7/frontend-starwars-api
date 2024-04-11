@@ -1,6 +1,6 @@
 <template>
     <div class="navbar">
-        <h1><a href="">Consumindo API do MongoDb com Vue.js</a></h1>
+        <h1>STAR WARS</h1>
     </div>
 </template>
 
@@ -12,9 +12,11 @@ export default {
 
 <style>
 .navbar{
-    background: #282c34;
+    background: #000000;
     color: #abb2bf;
-    padding: 10px;
+    padding: 50px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .navbar a {

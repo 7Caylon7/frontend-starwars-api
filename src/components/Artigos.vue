@@ -1,19 +1,26 @@
 <template>
     <div class="hello">
-
         <div class="form">
-            <p><input type="text" placeholder="Insira o titulo do filme" class="entrada" v-model="artigo.title"></p>
-            <p><textarea class="entrada" placeholder="Insira a descrição do filme" v-model="artigo.description"></textarea></p>
+            <p><input type="text" placeholder="Título" class="entrada" v-model="artigo.title"></p>
+            <p><textarea class="entrada" placeholder="Descrição" v-model="artigo.description"></textarea></p>
+            <p><input type="text" placeholder="Pôster" class="entrada" v-model="artigo.image_url"></p>
+            <p><input type="text" placeholder="Trailer" class="entrada" v-model="artigo.trailer_url"></p>
             <p><button class="sucess" @click="cadastrarArtigos">Cadastrar</button></p>
         </div>
 
         <div class="card">
             <div class="post"  v-for="artigo in artigos" v-bind:key="artigo.id">
-                <h3>Título: {{ artigo.title }}</h3>
-                <p>Descrição: {{ artigo.description }}</p>
-                <!-- <img src="{{ artigo.image_url }}" alt="poster do filme">
-                <a href="{{ artigo.trailer_url }}">Trailer</a> -->
-                <p><button class="del-button" @click="deletarArtigo(artigo.id)">Deletar</button></p>
+                <div class="text-post">
+                    <h3>Título: {{ artigo.title }}</h3>
+                    <p>Descrição: {{ artigo.description }}</p>
+                    <p>Trailer: <a v-bind:href="artigo.trailer_url" target="_blank">{{ artigo.trailer_url }}</a></p>
+                    <div class="button-container">
+                        <p><button class="edit-button">Editar</button></p>
+                        <p><button class="del-button" @click="deletarArtigo(artigo._id)">Deletar</button></p>
+                    </div>
+                </div>
+                <img v-bind:src="artigo.image_url" alt="Poster do filme">
+                
             </div>
         </div>
     </div>
@@ -28,7 +35,9 @@ export default {
             artigo: {
                 id: '',
                 title: '',
-                description: ''
+                description: '',
+                image_url: '',
+                trailer_url: ''
             }
         }
     },
@@ -64,21 +73,29 @@ export default {
         this.fetchArtigos()
         this.artigo.title = '',
         this.artigo.description = ''
-    }
-
+    },
+    
     //metodo para deletar (DELETE)
-    // deletarArtigo( id ){
-    //     if(confirm('Deseja deletar o filme selecionado?')){
-    //         alert('Agora sim!')
-    //         fetch(`http://localhost:3000/${id}`, {
-    //             method: 'delete'
-    //         })
-    //         .then( res => res.json())
-    //         .catch( err => console.log( err ))
-    //         alert('O Filme selecionado foi deletado com sucesso!!')
-    //         this.fetchArtigos()
-    //     }
-    // }
+    deletarArtigo(id) {
+        if (confirm('Deseja deletar o filme selecionado?')) {
+            // Alerta para confirmação
+            alert('Agora sim!');
+            
+            // Chamada para deletar o artigo com o ID fornecido
+            fetch(`http://localhost:3000/${id}`, {
+                method: 'DELETE' // Deve ser 'DELETE', não 'delete'
+            })
+            .then(res => res.json())
+            .then(() => {
+                // Alerta de sucesso após a exclusão
+                alert('O Filme selecionado foi deletado com sucesso!!');
+                
+                // Recarrega os artigos após a exclusão
+                this.fetchArtigos();
+            })
+            .catch(err => console.log(err));
+        }
+    }
     },
 
     created(){
@@ -91,28 +108,76 @@ export default {
 .entrada{
     width: 70%;
     padding: 10px;
+    border: none;
     border-radius: 8px;
     margin: 5px;
 }
 
 .hello{
+    background: #7c7b7b;
     color: #333;
     padding: 20px;
     max-width: 1200px;
-    margin: auto;
+    margin: 30px auto;
+    border-radius: 10px;
 }
 
 .card{
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
     color: #333;
 }
 
 .post{
-    border: 1px solid silver;
-    padding: 10px;
+    background: #7c7b7b;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .post a{
-    color: #333;
+    color: #000000;
 }
+
+.post img{
+    max-width: 200px;
+}
+
+.button-container{
+    display: flex;
+    flex-direction: row;
+    margin-left: 400px;
+    margin-top: 20px;
+}
+
+.button-container button{
+    margin: 0 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.form {
+    padding: 10px;
+}
+
+.form button{
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.form button:hover{
+    background: #7c7b7b;
+    color: #fff;
+}
+
+.edit-button:hover{
+    background: #2e63e9;
+}
+
+.del-button:hover{
+    background: #e92e2e;
+}
+
 </style>

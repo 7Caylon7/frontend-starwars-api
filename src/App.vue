@@ -26,6 +26,7 @@ export default {
   padding: 0;
   box-sizing: border-box;
   text-decoration: none;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
 #app {
