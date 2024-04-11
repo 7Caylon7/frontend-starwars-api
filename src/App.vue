@@ -2,6 +2,7 @@
   <div id="app">
     <VueNavbar />
     <VueArtigos />
+    <VueFooter />
   </div>
 </template>
 
@@ -9,13 +10,15 @@
 
 import VueArtigos from './components/Artigos.vue'
 import VueNavbar from './components/Navbar.vue'
+import VueFooter from './components/Footer.vue'
 
 
 export default {
   name: 'App',
   components: {
     VueArtigos,
-    VueNavbar
+    VueNavbar,
+    VueFooter
   }
 }
 </script>
