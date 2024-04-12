@@ -1,6 +1,6 @@
 <template>
     <div class="navbar">
-        <h1>FILMES</h1>
+        <h1><span class="pi pi-prime"></span> FILMES</h1>
     </div>
 </template>
 
