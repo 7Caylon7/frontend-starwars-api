@@ -3,8 +3,8 @@
         <div class="form">
             <p><input type="text" placeholder="Título" class="entrada" v-model="artigo.title"></p>
             <p><textarea class="entrada" placeholder="Descrição" v-model="artigo.description"></textarea></p>
-            <p><input type="text" placeholder="Pôster" class="entrada" v-model="artigo.image_url"></p>
-            <p><input type="text" placeholder="Trailer" class="entrada" v-model="artigo.trailer_url"></p>
+            <p><input type="url" placeholder="Url do pôster" class="entrada" v-model="artigo.image_url"></p>
+            <p><input type="url" placeholder="Url do trailer" class="entrada" v-model="artigo.trailer_url"></p>
             <p>
                 <button v-if="editar" @click="cadastrarArtigos">Editar</button>
                 <button v-else @click="cadastrarArtigos">Cadastrar</button>
@@ -47,6 +47,12 @@ export default {
     },
 
     methods: {
+        isValidURL(url) {
+            // Expressão regular para validar uma URL
+            const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+            return urlRegex.test(url);
+        },
+
         //metodo para acessar a lista de filmes (GET)
         fetchArtigos() {
             fetch(`https://filmes-api-sandy.vercel.app/`)
@@ -59,6 +65,12 @@ export default {
 
         //metodo para cadastrar na lista de filmes (POST)
         cadastrarArtigos() {
+            // Realizar a validação antes de enviar os dados
+            if (!this.isValidURL(this.artigo.image_url) || !this.isValidURL(this.artigo.trailer_url)) {
+                alert('Por favor, insira URLs válidas para o pôster e o trailer.');
+                return;
+            }
+
             if (this.editar === false) {
                 //verificação
                 if (this.artigo.title == '' && this.artigo.description == '') {
