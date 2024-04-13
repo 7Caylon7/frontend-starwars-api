@@ -12,7 +12,8 @@
         </div>
 
         <div class="card">
-            <div class="post" v-for="artigo in artigos" v-bind:key="artigo.id">
+            <input class="search" type="text" v-model="searchQuery" placeholder="Pesquisar filme">
+            <div class="post" v-for="artigo in filteredArtigos" v-bind:key="artigo.id">
                 <div class="text-post">
                     <h3>{{ artigo.title }}</h3>
                     <p><strong>Descrição: </strong>{{ artigo.description }}</p>
@@ -26,6 +27,10 @@
 
             </div>
         </div>
+    </div>
+
+    <div class="back-top">
+        <button @click="backTop"><span class="pi pi-angle-up" style="color: #fff;"></span></button>
     </div>
 </template>
 
@@ -42,11 +47,40 @@ export default {
                 image_url: '',
                 trailer_url: ''
             },
-            editar: false
+            editar: false,
+            searchQuery: ''
         }
     },
 
+    computed: {
+        filteredArtigos() {
+            return this.artigos.filter(artigo =>
+            artigo.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+    }
+    },
+
     methods: {
+
+        backTop() {
+            const duration = 400; // Duração da animação em milissegundos
+            const startTime = performance.now(); // Tempo de início da animação
+            const startTop = window.pageYOffset; // Posição inicial de rolagem
+
+            const animateScroll = (timestamp) => {
+            const elapsed = timestamp - startTime; // Tempo decorrido desde o início da animação
+            const progress = Math.min(elapsed / duration, 1); // Progresso da animação (limitado a 1)
+
+            window.scrollTo(0, startTop * (1 - progress)); // Atualiza a posição de rolagem
+
+            if (progress < 1) {
+                requestAnimationFrame(animateScroll); // Continua a animação até que o progresso seja 1
+            }
+        };
+
+            requestAnimationFrame(animateScroll); // Inicia a animação
+        },
+
         isValidURL(url) {
             // Expressão regular para validar uma URL
             const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
@@ -165,6 +199,15 @@ export default {
     border-radius: 10px;
 }
 
+.search{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 70px 0px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
 .card {
     display: flex;
     flex-direction: column;
@@ -258,4 +301,31 @@ img {
 .del-button:hover {
     background: #e92e2e;
 }
+
+.back-top {
+  position: fixed;
+  bottom: 20px; /* Distância do botão até o fundo da página */
+  right: 15px; /* Distância do botão até a borda direita da página */
+  z-index: 1000; /* Garante que o botão esteja acima de outros elementos */
+  border: none;
+  cursor: pointer;
+}
+
+.back-top button{
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.53);
+    border-radius: 8px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.8px);
+    -webkit-backdrop-filter: blur(5.8px);
+    transition: transform 0.5s ease-out;
+}
+
+.back-top button:hover{
+    transform: scale(1.2); /* Escala de 1.4 ao passar o mouse */
+}
+
+
 </style>
